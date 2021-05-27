@@ -17,11 +17,85 @@ import java.io.Reader;
  */
 
 public class Movies {
+    Map sg;
+
+    public void list(String source){
+        ItemBag<String> bg = sg.list(source);
+        Paths P = sg.G();
+        // Checks to see if the name in the database starts with the 'source'
+        // then adds it to the bag
+        for(int i = 0; i <= P.V(); i++){
+            if(sg.name(i).startsWith(source))
+                bg.add(sg.name(i));
+        }
+
+        // Prints the name(s) from the bag
+        if(bg != null){
+            for(String s:bg){
+                System.out.println(s);
+            }
+        }
+    }
+
+    public void neighbors(String source){
+        ItemBag<String> bg = sg.neighbors(source);
+        Paths P = sg.G();
+
+        // Creates a bag of integers and gets the adjacent vertices
+        int k = sg.st.get(source);
+        ItemBag<Integer> bi = (ItemBag<Integer>) P.adj(k);
+
+        // Adds the name to the bag
+        for(int i : bi){
+            bg.add(sg.name(i));
+        }
+
+        // Prints the names from the bag
+        if(bg != null){
+            for(String s:bg){
+                System.out.println(s);
+            }
+        }
+    }
+    public void path(String source, String sink){
+        Paths P = sg.G();
+
+        if (!sg.contains(source)) {
+            System.out.println(source + " not in database.");
+            return;
+        }
+
+        int s = sg.index(source);
+
+        // Do a Breadth First Search
+        BFS bfs = new BFS(P, s);
+
+        if(sg.contains(sink)){
+            int t = sg.index(sink);
+            if(bfs.hasPathTo(t)){
+                System.out.println(sg.name(s) + " --> " + sg.name(t));
+                for(int x : bfs.pathTo(t)){
+                    if(x == s)
+                        System.out.println(sg.name(x));
+                    else{
+                        if(bfs.dist(x) % 2 != 0)
+                            System.out.println("   " + sg.name(x));
+                        else
+                            System.out.println(sg.name(x));
+                    }
+                }
+            }
+            else
+                System.out.println("Not connected");
+        }
+        else
+            System.out.println("Not in database");
+    }
 
     public static void main (String[] args) {
 
         try {
-            Reader reader = new FileReader(args[0]);
+            Reader reader = new FileReader("tmdb_5000_credits.csv");
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT);
             JSONParser jsonParser = new JSONParser();
 
@@ -50,7 +124,7 @@ public class Movies {
 
         catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("File " + args[0] + " is invalid or is in the wrong format.");
+            System.out.println("File " + args + " is invalid or is in the wrong format.");
         }
     }
 }

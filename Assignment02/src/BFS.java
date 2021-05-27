@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-public class BreadthFirstSearch extends Movies{
+public class BFS extends Movies{
 
     private static final int MAX = Integer.MAX_VALUE;
     private boolean[] visited;
@@ -10,7 +10,7 @@ public class BreadthFirstSearch extends Movies{
     private int[] dist;
 
 
-    public BreadthFirstSearch(Paths G, int s){
+    public BFS(Paths G, int s){
         visited = new boolean[G.V()];
         dist = new int[G.V()];
         et = new int[G.V()];

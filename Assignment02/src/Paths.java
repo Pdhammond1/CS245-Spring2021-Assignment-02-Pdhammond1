@@ -1,18 +1,9 @@
-import java.util.Iterator;
 import java.util.Stack;
 
-public class Paths <Item> implements Iterable <Item>{
+public class Paths{
     private int V;              // number of vertices in path
     private int E;            // number of edges
-    private Paths<Integer>[] adj;
-    private int N;               // number of elements in bag
-    private Node <Item> first;    // beginning of bag
-
-    // helper linked list class
-    private class Node<Item> {
-        private Item item;
-        private Node<Item> next;
-    }
+    private ItemBag<Integer>[] adj;
 
     /**
      * Initializes an empty path
@@ -25,20 +16,24 @@ public class Paths <Item> implements Iterable <Item>{
             throw new IllegalArgumentException("Number of vertices must be nonnegative");
         }
 
-        this.V = V; this.E = 0;
+        this.V = V;
+        this.E = 0;
 
         for (int v = 0; v < V; v++) {
-            adj[v] = new Paths<Integer>(V);
+            if (adj != null) {
+                adj[v] = new ItemBag<Integer>();
+            }
         }
     }
 
     /**
      * Initializes a new path that is a deep copy of <tt>G</tt>.
-     * @param P the path to copy
      *
+     * @param P the path to copy
      */
     public Paths(Paths P) {
-        this(P.V()); this.E = P.E();
+        this(P.V());
+        this.E = P.E();
 
         for (int v = 0; v < P.V(); v++) {
             // reverse so that adjacency list is in same order as original
@@ -63,6 +58,7 @@ public class Paths <Item> implements Iterable <Item>{
 
     /**
      * Returns the number of edges in the graph.
+     *
      * @return the number of edges in the graph
      */
     public int E() {
@@ -71,6 +67,7 @@ public class Paths <Item> implements Iterable <Item>{
 
     /**
      * Adds the undirected edge v-w to the graph.
+     *
      * @param v one vertex in the edge
      * @param w the other vertex in the edge
      */
@@ -89,6 +86,7 @@ public class Paths <Item> implements Iterable <Item>{
 
     /**
      * Returns the vertices adjacent to vertex.
+     *
      * @param v the vertex
      */
 
@@ -100,7 +98,8 @@ public class Paths <Item> implements Iterable <Item>{
     }
 
     /**
-     ** Returns a string representation of the path.
+     * * Returns a string representation of the path.
+     *
      * @return the number of vertices and the number of edges
      */
     public String toString() {
@@ -117,73 +116,4 @@ public class Paths <Item> implements Iterable <Item>{
         }
         return s.toString();
     }
-
-
-    public void Bag() {
-        first = null;
-        N = 0;
-    }
-
-    /**
-     * Is this bag empty?
-     * @return true if this bag is empty; false otherwise
-     */
-    public boolean isEmpty() {
-        return first == null;
-    }
-
-    /**
-     * Returns the number of items in this bag.
-     * @return the number of items in this bag
-     */
-    public int size() {
-        return N;
-    }
-
-    /**
-     * Adds the item to this bag.
-     * @param item the item to add to this bag
-     */
-    public void add(Item item) {
-        Node <Item> oldfirst;
-        oldfirst = first;
-        first = new Node <Item>();
-        first.item = item;
-        first.next = oldfirst;
-        N++;
-    }
-
-    /**
-     * Returns an iterator that iterates over the items in the bag in arbitrary order.
-     */
-    public Iterator<Item> iterator()  {
-        return new ListIterator<Item>(first);
-    }
-
-    // an iterator, doesn't implement remove() since it's optional
-
-    private class ListIterator<Item> implements Iterator<Item> {
-        private Node<Item> current;
-
-        public ListIterator(Node<Item> first) {
-            current = first;
-        }
-
-        public boolean hasNext(){
-            return current != null;
-        }
-        public void remove(){
-            throw new UnsupportedOperationException();
-        }
-
-        public Item next() {
-            if (!hasNext()){
-                throw new UnsupportedOperationException();
-            }
-            Item item = current.item;
-            current = current.next;
-            return item;
-        }
-    }
 }
-
